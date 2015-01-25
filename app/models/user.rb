@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
   # Use friendly_id on Users
+  has_many :orders
+
   extend FriendlyId
   friendly_id :friendify, use: :slugged
   
@@ -32,7 +34,8 @@ has_many :posts
   validates_format_of :email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
   
   def self.paged(page_number)
-    order(admin: :desc, username: :asc).page page_number
+    # order(admin: :desc, username: :asc).page page_number
+    order(admin: :desc, id: :asc).page page_number
   end
   
   def self.search_and_order(search, page_number)
@@ -41,7 +44,8 @@ has_many :posts
       admin: :desc, username: :asc
       ).page page_number
     else
-      order(admin: :desc, username: :asc).page page_number
+      # order(admin: :desc, username: :asc).page page_number
+      order(admin: :desc, id: :asc).page page_number
     end
   end
   

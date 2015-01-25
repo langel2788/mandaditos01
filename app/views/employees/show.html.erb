@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Nombre:</strong>
+  <%= @employee.nombre %>
+</p>
+
+<p>
+  <strong>Sueldo:</strong>
+  <%= number_to_currency(@employee.sueldo) %>
+</p>
+
+<p>
+  <strong>Bono:</strong>
+  <%= number_to_currency(@employee.bono) %>
+</p>
+
+<p>
+  <strong>Dia descanso:</strong>
+  <%= @employee.dia_descanso %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @employee.status_actual %>
+</p>
+
+<%= link_to 'Editar', edit_employee_path(@employee) %> |
+<%= link_to 'Regresar', employees_path %>

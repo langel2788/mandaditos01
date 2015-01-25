@@ -1,0 +1,57 @@
+<%= form_for(@employee) do |f| %>
+  <% if @employee.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@employee.errors.count, "error") %> prohibited this employee from being saved:</h2>
+
+      <ul>
+      <% @employee.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :nombre %><br>
+    <%= f.text_field :nombre %>
+  </div>
+  <div class="field">
+    <%= f.label :sueldo %><br>
+    <%= f.text_field :sueldo %>
+  </div>
+  <div class="field">
+    <%= f.label :bono %><br>
+    <%= f.text_field :bono %>
+  </div>
+  <div class="field">
+    <%= f.label :dia_descanso %><br>
+    <%#= f.text_field :dia_descanso %>
+
+    <%= f.select(:dia_descanso,[
+      ['Lunes', "Monday"], 
+      ['Martes', "Tuesday"], 
+      ['Miercoles', "Wednesday"], 
+      ['Jueves', "Thursday"], 
+      ['Viernes', "Friday"],
+      ['Sabado', "Saturday"],
+      ['Domingo', "Sunday"]
+    ]) %>
+
+  </div>
+  <%= f.label :status %><br>
+  <div class="field">
+    <%= f.label :status do %> 
+      <%= f.radio_button(:status,"0") %> 
+        Activo 
+    <% end %>
+
+    <%= f.label :status do %> 
+      <%= f.radio_button(:status,"1") %> 
+        Baja 
+    <% end %>
+
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

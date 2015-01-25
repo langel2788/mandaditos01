@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Costo:</strong>
+  <%= @order.costo %>
+</p>
+
+<p>
+  <strong>Colonia:</strong>
+  <%= @order.colonia %>
+</p>
+
+<p>
+  <strong>Hora registro:</strong>
+  <%= @order.hora_registro %>
+</p>
+
+<p>
+  <strong>Hora entrega:</strong>
+  <%= @order.hora_entrega %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @order.status_actual%>
+</p>
+
+<p>
+  <strong>Detalles:</strong>
+  <%= @order.detalles %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @order.user.cliente %>
+</p>
+
+<p>
+  <strong>Employee:</strong>
+  <%= @order.employee.nombre %>
+</p>
+
+<%= link_to 'Edit', edit_order_path(@order) %> |
+<%= link_to 'Back', orders_path %>
+

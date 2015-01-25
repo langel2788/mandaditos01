@@ -1,0 +1,38 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Repartidores <small>Todos</small></h1>
+<!-- <h1>Listing Employees</h1> -->
+<table>
+  <thead>
+    <tr>
+      <th>Nombre </th> <th>Sueldo </th> <th>Bono </th> <th>Dia descanso </th> <th>Status </th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @employees.each do |employee| %>
+      <tr>
+        <!-- <td><%= link_to employee.nombre, employee_path(employee) %></td> -->
+        <td><%= link_to employee.nombre, employee %></td>        
+        <td><%= employee.sueldo %></td>
+        <td><%= employee.bono %></td>
+        <td><%= employee.dia_descanso %></td>
+        <td><%= employee.status_actual %></td>
+
+        <!-- <td><%= link_to 'Show', employee %></td> -->
+        <td><%= link_to 'Editar', edit_employee_path(employee) %></td>
+
+        <!-- <td> <%= link_to  'Eliminar', employee, method: :delete, data: { confirm: 'Estas seguro?' } %></td>-->
+
+         <td> <%= link_to 'Dar de Baja', dar_de_baja_employee_path(employee,employee.id), method: :patch, data: { confirm: 'Estas seguro?' } %></td>
+                 
+        <td><%= link_to ' Reactivar', dar_de_alta_employee_path(employee,employee.id), method: :patch, data: { confirm: 'Estas seguro?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'Registrar Repartidor', new_employee_path %>

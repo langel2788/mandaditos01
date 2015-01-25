@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150103212135) do
+ActiveRecord::Schema.define(version: 20150103230921) do
+
+  create_table "employees", force: :cascade do |t|
+    t.string   "nombre"
+    t.decimal  "sueldo",       precision: 5, scale: 2
+    t.decimal  "bono",         precision: 5, scale: 2
+    t.string   "dia_descanso"
+    t.integer  "status"
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
@@ -25,6 +35,22 @@ ActiveRecord::Schema.define(version: 20150103212135) do
   add_index "friendly_id_slugs", ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id"
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
+
+  create_table "orders", force: :cascade do |t|
+    t.decimal  "costo",         precision: 4, scale: 2
+    t.string   "colonia"
+    t.datetime "hora_registro"
+    t.datetime "hora_entrega"
+    t.boolean  "status"
+    t.text     "detalles"
+    t.integer  "user_id"
+    t.integer  "employee_id"
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+  end
+
+  add_index "orders", ["employee_id"], name: "index_orders_on_employee_id"
+  add_index "orders", ["user_id"], name: "index_orders_on_user_id"
 
   create_table "posts", force: :cascade do |t|
     t.string   "title"
