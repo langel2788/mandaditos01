@@ -5,10 +5,19 @@ class Order < ActiveRecord::Base
 def status_actual
     respuesta = "no tiene"
     case status
-      when false then respuesta = "Pendiente"
-      when true then respuesta = "Entregado"
+      when 0 then respuesta = "Pendiente"
+      when 1 then respuesta = "Entregado"
+      when 2 then respuesta = "Cancelado"
     end
     respuesta    
+end
+
+def repartidor_asignado
+	respuesta = "No esta asignado"
+	if employee != nil
+		respuesta = employee.nombre
+	end
+	respuesta
 end
 
 end

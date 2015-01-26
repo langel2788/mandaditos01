@@ -74,6 +74,12 @@ rails g scaffold Employee nombre:string sueldo:decimal{5.2} bono:decimal{5.2} di
   # agregar las nuevas funciones en before action en controlador de empleados
   before_action :set_employee, only: [:show, :edit, :update, :destroy, :dar_de_baja, :dar_de_alta]
 
+# agregar los parametros que se pueden modificar en app/controllers/admin/employee_controller 
+def user_params
+    params.require(:employee).permit(:nombre, :sueldo, :bono, :dia_descanso, :status)
+
+  end
+
  # agregar las funciones de alta y baja de epmpleados en controlador de empleados
   def dar_de_baja
     @employee.update_attribute(:status,1)
@@ -138,9 +144,134 @@ rails g scaffold Order costo:decimal{4.2} colonia:string hora_registro:datetime 
 	.....
 # modificar el show de pedidos para mostrsar las relaciones con user y employee
 
+#En el form de employees agrego la opcion para seleccionar el dia de la seman de descanso
+  <div class="field">
+    <%= f.label :dia_descanso %> <br>
+    <%= f.select(:dia_descanso,[
+      ['Lunes', "Monday"], 
+      ['Martes', "Tuesday"], 
+      ['Miercoles', "Wednesday"], 
+      ['Jueves', "Thursday"], 
+      ['Viernes', "Friday"],
+      ['Sabado', "Saturday"],
+      ['Domingo', "Sunday"]
+    ]) %>
+
+  </div>
+
+# en el form de employees agrego la opcion para que el stats sea con radio button
+
+<%= f.label :status %><br>
+  <div class="field">
+    <%= f.label :status do %> 
+      <%= f.radio_button(:status,"0") %> 
+        Activo 
+    <% end %>
+
+    <%= f.label :status do %> 
+      <%= f.radio_button(:status,"1") %> 
+        Baja 
+    <% end %>
+
+
+
+#en el controlador orders se agrega la funcion para cambiar de status a entregado
+# se actualiza la fecha y hora para llevar registro de los tiempos
+  def cambiar_a_entregado
+    @order.update_attribute(:status,1)
+    @order.update_attribute(:hora_entrega,DateTime.now)
+
+    redirect_to @order, notice: "Pedido entregado"
+  end
+
+# en el controlador order se agrega la nueva funcion para que se pueda ejecutar
+  before_action :set_order, only: [:show, :edit, ...... :cambiar_a_entregado]
+
+# en el archivo routes se agrega la ruta a la funcion de cambiar el status a entregado para que genere la ruta
+# automaticamente
+resources :orders do 
+    member do |variable|
+      patch :cambiar_a_entregado    
+    end
+    
+  end
+
+# del index de orders se quitan los campos que se deben registrar automaticamente por sistema o que se modificaran
+#a travez de una funcion especifica
+
+    <%= f.label :hora_registro %>
+    <%= f.datetime_select :hora_registro %>
+    <%= f.datetime_select :hora_entrega %>
+    <%= f.text_field :status %>
+    <%= f.text_field :user_id %>
+    <%= f.text_field :employee_id 
+    <%= f.text_field :costo %>
+ 
+ # cambiar el tipo de dato del campo status de orders para poder agregar el status cancelado y no solo boleano
+  rails g migration change_status_format_in_orders
+  change_column(:orders, :status, :integer)
+
+
+
+
+#en el controlador orders se agrega la funcion para cambiar de status a cancelado
+# se actualiza la fecha a nulo por que siginifica que no se entrego
+  def cancelar_pedido
+    @order.update_attribute(:status,2)
+    @order.update_attribute(:hora_entrega,nil)
+
+    redirect_to @order, notice: "Pedido Cancelado"
+  end
+
+# en el controlador order se agrega la nueva funcion para que se pueda ejecutar
+  before_action :set_order, only: [:show, :edit, ...... :cancelar_pedido]
+
+# en el archivo routes se agrega la ruta a la funcion de cambiar el status a cancelado para que genere la ruta
+# automaticamente
+resources :orders do 
+    member do |variable|
+      patch :cambiar_a_entregado    
+      patch :cancelar_pedido
+    end
+    
+  end
+
+
+# En la _form de orders se agrega la opcion de seleccionar al repartidor
+
+<div class="field">
+    <%= f.label(:employee_id, "Repartidor") %><br>
+    <%= f.select(:employee_id, Employee.all.collect {|p| [ p.nombre, p.id ] }, {include_blank: 'Ninguno'}) %>
+  </div>
+
+# En la _form de orders se cambia el orden de los datos y se modifican los links para seleccionar la direccion como
+# el link para consultar el registro
+
+  <tbody>
+    <% @orders.each do |order| %>
+      <tr>
+        <td><%= order.user.cliente %></td>
+        <td><%= link_to order.colonia,order %></td>
+        <td><%= link_to order.costo, order %></td>        
+        <td><%= order.hora_registro %></td>
+        <td><%= order.hora_entrega %></td>
+        <td><%= order.status_actual %></td>
+        <td><%= order.detalles %></td>
+        
+        <td><%= order.employee.nombre %></td>
+        <td><%#= link_to 'Editar', edit_order_path(order) %></td>
+        <td><%#= link_to 'Destroy', order, method: :delete, data: { confirm: 'Estas seguro?' } %></td>
+        <td><%= link_to 'Cancelar', cancelar_pedido_order_path(order,order.id), method: :patch, data: { confirm: 'Estas seguro?' } %></td>
+        <td><%= link_to 'Registrar Entrega', cambiar_a_entregado_order_path(order,order.id), method: :patch, data: { confirm: 'Estas seguro?' } %></td>
+      </tr>
+
+#se crea funcion en 
 
 
 # REGSITRAR KILIMEREAJE Y GASOLINA DE LAS MOTOS Y LA CAJA CHICA
 
 
 # REGISTRAR NUMERO DE COMANDAS, YA ESTAN IMPRERSAS DE IMPRENTA
+
+
+

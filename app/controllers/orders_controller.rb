@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: [:show, :edit, :update, :destroy, :asignar_repartidor, :cambiar_a_entregado]
+  before_action :set_order, only: [:show, :edit, :update, :destroy, :asignar_repartidor, :cambiar_a_entregado,:cancelar_pedido]
 
   respond_to :html
 
@@ -24,6 +24,11 @@ class OrdersController < ApplicationController
     respond_with(@order)
   end
 
+  def new_by_admin
+    @order = Order.new
+    respond_with(@order)
+  end
+    
   def edit
   end
 
@@ -34,11 +39,15 @@ class OrdersController < ApplicationController
 
     @order.hora_registro = DateTime.now
 
-    @order.costo = current_user.costo_de_entrega
-
-    @order.user_id = current_user.id
-
-    @order.employee_id = 1
+#    @order.user_id = current_user.id
+    
+    # validar quien es el usuario actual para asignar el costo del pedido
+    if current_user.username != "admin"
+      @order.user_id = current_user.id
+      @order.costo = current_user.costo_de_entrega
+    else
+      @order.costo = @order.user.costo_de_entrega
+    end
 
     @order.save
     respond_with(@order)
@@ -59,8 +68,18 @@ class OrdersController < ApplicationController
     @order.update_attribute(:hora_entrega,DateTime.now)
 
     redirect_to @order, notice: "Pedido entregado"
+
+    #redirect_to orders_path, notice: "Pedido entregado"
+    #redirect_to orders_path, notice: "Pedido de "+ @order.user.cliente + " Registado entregado a las "+ @order.hora_entrega.to_s
   end
 
+  def cancelar_pedido
+    @order.update_attribute(:status,2)
+    @order.update_attribute(:hora_entrega,nil)
+
+    # redirect_to @order, notice: "Pedido Cancelado"
+    redirect_to orders_path, notice: "Pedido de #{@order.user.cliente} de las #{@order.hora_registro.to_s} Cancelado ."
+  end
 
   private
     def set_order

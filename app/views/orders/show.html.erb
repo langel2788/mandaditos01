@@ -1,9 +1,10 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Costo:</strong>
-  <%= @order.costo %>
+  <strong>Cliente:</strong>
+  <%= @order.user.cliente %>
 </p>
+<p>
 
 <p>
   <strong>Colonia:</strong>
@@ -30,16 +31,14 @@
   <%= @order.detalles %>
 </p>
 
+  <strong>Costo:</strong>
+  <%= @order.costo %>
+</p>
 <p>
-  <strong>User:</strong>
-  <%= @order.user.cliente %>
+  <strong>Repartidor:</strong>
+  <%= @order.repartidor_asignado %>
 </p>
 
-<p>
-  <strong>Employee:</strong>
-  <%= @order.employee.nombre %>
-</p>
-
-<%= link_to 'Edit', edit_order_path(@order) %> |
-<%= link_to 'Back', orders_path %>
+<%= link_to 'Editar', edit_order_path(@order) %> |
+<%= link_to 'Regresar', orders_path %>
 

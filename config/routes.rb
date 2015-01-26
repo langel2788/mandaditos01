@@ -2,10 +2,13 @@ Mandaditos01::Application.routes.draw do
 
   resources :orders do 
     member do |variable|
-      patch :cambiar_a_entregado      
+      patch :cambiar_a_entregado    
+      patch :cancelar_pedido  
+      
     end
-    
+      get 'new_by_admin', on: :collection
   end
+
 
   resources :employees do
     member do |variable|
